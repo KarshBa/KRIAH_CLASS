@@ -113,13 +113,14 @@
     .stack { display: grid; gap: var(--gap); }
     .top-corner {
       position: fixed;
-      top: 8px;
-      right: 12px;
+      top: 1.25rem;   /* adds breathing room from top */
+      right: 1.5rem;  /* gentle padding from edge */
       font-family: "Merriweather", Georgia, serif;
       font-size: 1.25rem;
       color: var(--ink-soft);
       opacity: 0.85;
       user-select: none;
+      z-index: 10;    /* ensures it floats above the card */
     }
   </style>
 </head>
@@ -190,6 +191,7 @@
   </script>
 </body>
 </html>
+
 
 
 
