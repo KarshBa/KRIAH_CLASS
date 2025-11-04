@@ -111,9 +111,20 @@
 
     /* Utility: constrain content spacing */
     .stack { display: grid; gap: var(--gap); }
+    .top-corner {
+      position: fixed;
+      top: 8px;
+      right: 12px;
+      font-family: "Merriweather", Georgia, serif;
+      font-size: 1.25rem;
+      color: var(--ink-soft);
+      opacity: 0.85;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
+  <div class="top-corner" dir="rtl">בס"ד</div>
   <main class="card" role="main">
     <header class="head">
       <h1 style="margin:.25rem 0 .15rem 0;">Kriah, Learning to read Hebrew</h1>
@@ -179,6 +190,7 @@
   </script>
 </body>
 </html>
+
 
 
 
