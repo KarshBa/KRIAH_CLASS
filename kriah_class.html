@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Aleph-Bet • Lesson 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #faf6ee;          /* warm linen/ivory */
+      --ink: #2b211a;         /* dark espresso text */
+      --ink-soft:#4a3b31;
+      --card: #fffdf8;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+      --gap: 1.25rem;
+    }
+
+    /* Base typography */
+    html { font-size: 16px; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, system-ui, -apple-system, "Segoe UI Variable", "Noto Sans", "Liberation Sans", sans-serif;
+      line-height: 1.5;
+      display: grid; place-items: center; min-height: 100svh; padding: 1rem;
+    }
+    h1, h2, figcaption {
+      font-family: "Merriweather", Georgia, "Times New Roman", serif;
+    }
+
+    /* Cozy card container */
+    .card {
+      max-width: 780px; width: 100%;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 2.5vw + .5rem, 2rem);
+      animation: fadeUp .6s ease both;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card { animation: none; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Media block */
+    .media { display: grid; gap: var(--gap); }
+    figure { margin: 0; text-align: center; }
+    .image-wrap{
+      display: grid; place-items: center;
+      background: #fffaf1; border: 1px solid #efe7d9;
+      border-radius: 12px; padding: .75rem;
+    }
+    img{
+      max-width: 100%; height: auto; display: block;
+      border-radius: 8px;
+      box-shadow: 0 3px 14px rgba(0,0,0,.08);
+    }
+    figcaption{
+      font-size: .95rem; color: var(--ink-soft);
+      margin-top: .5rem;
+    }
+
+    /* Audio */
+    .audio-block { display: grid; gap: 0; }
+    .audio-block label { font-weight: 800; }
+
+    /* Buttons */
+    .actions{
+      display: grid; gap: .75rem; margin-top: .5rem;
+    }
+    @media (min-width: 640px){
+      .actions{ grid-template-columns: 1fr 1fr; }
+    }
+    .btn{
+      appearance: none; -webkit-tap-highlight-color: transparent;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .5rem; text-decoration: none; text-align: center;
+      padding: .9rem 1.1rem; font-weight: 600;
+      background: #fff7ea; color: var(--ink);
+      border: 1px solid #eadfcd; border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.12); background:#fff1db; }
+    .btn:active{ transform: translateY(0); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+    .btn.secondary{ background:#f6f1e7; }
+    .btn span.kbd{ font-variant-numeric: tabular-nums; opacity:.7; font-weight:500; }
+
+    /* Focus styles (high-contrast, visible) */
+    :where(a, button, .btn, audio):focus-visible{
+      outline: 3px solid #7a5b2e; outline-offset: 3px; border-radius: 12px;
+    }
+
+    /* Print-friendly tweaks */
+    @media print{
+      body { background: #fff; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #ccc; }
+      .actions { grid-template-columns: 1fr; gap: .35rem; }
+      .btn { border: 1px solid #888; box-shadow: none; background: #fff; }
+    }
+
+    /* Small heading/subtle divider */
+    .head { margin-bottom: .25rem; }
+    .sub { margin: 0 0 1rem 0; color: var(--ink-soft); }
+    .hr {
+      height: 1px; background: linear-gradient(90deg, transparent, #e9decb, transparent);
+      margin: .75rem 0 1rem;
+    }
+
+    /* Utility: constrain content spacing */
+    .stack { display: grid; gap: var(--gap); }
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <header class="head">
+      <h1 style="margin:.25rem 0 .15rem 0;">Kriah, Learning to read Hebrew</h1>
+      <p class="sub">Reference for the Aleph-Bet with audio.</p>
+      <div class="hr" aria-hidden="true"></div>
+    </header>
+
+    <section class="media stack" aria-labelledby="alephbet-title">
+      <h2 id="alephbet-title" class="visually-hidden" style="position:absolute;left:-9999px;top:auto;overflow:hidden;width:1px;height:1px;">Aleph-Bet Image and Audio</h2>
+
+      <!-- Image with figure/figcaption; scales fluidly and stays centered -->
+      <figure>
+        <div class="image-wrap">
+          <!-- TODO: If assets live in a subfolder, set basePath in the script below -->
+          <img
+            class="use-base"
+            data-src="alephbet.png"
+            alt="The Hebrew Aleph-Bet: chart of letters Alef through Tav in reading order."
+            width="1600" height="1200" />
+        </div>
+      </figure>
+
+      <!-- Audio player with clear label + fallback text -->
+      <div class="audio-block">
+        <label for="lesson-audio">Practice Audio</label>
+        <!-- TODO: If the audio is elsewhere, adjust basePath in the script below -->
+        <audio id="lesson-audio" class="use-base" data-src="signal-2025-11-03-235518_cleaned.mp3" controls aria-label="Play Aleph-Bet practice audio.">
+          Your browser does not support the audio element. You can <a class="use-base" data-href="signal-2025-11-03-235518_cleaned.mp3">download the audio here</a>.
+        </audio>
+      </div>
+
+      <!-- Actions: stacked on narrow, side-by-side on wide screens -->
+      <nav class="actions" aria-label="Lesson links">
+        <!-- TODO: Update basePath in the script to change where lesson-2.html lives -->
+        <a class="btn use-base" data-href="E:\Downloads\kamats_alef_a_2.html" rel="bookmark">
+          Kamatz-Aleph-Ah
+        </a>
+
+        <!-- TODO: File opens in a new tab; keep rel=noopener for security -->
+        <a class="btn secondary use-base" data-href="KRIAH CLASS.pdf" target="_blank" rel="noopener">
+          Open PDF <span class="kbd" aria-hidden="true">⇱</span>
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <script>
+    /* -----------------------------------------------------------
+       Tiny path utility
+       - Set basePath to the folder where your assets live.
+       - Example: const basePath = "assets/"; or "/cdn/kriah/";
+       - Leave as "" if files sit next to index.html.
+       ----------------------------------------------------------- */
+    const basePath = ""; // TODO: set to "assets/" or similar if needed
+
+    // Apply basePath to any element with .use-base and data-src/data-href
+    document.querySelectorAll(".use-base").forEach(el => {
+      const src = el.getAttribute("data-src");
+      const href = el.getAttribute("data-href");
+      if (src)  el.setAttribute("src",  basePath + src);
+      if (href) el.setAttribute("href", basePath + href);
+    });
+  </script>
+</body>
+</html>
