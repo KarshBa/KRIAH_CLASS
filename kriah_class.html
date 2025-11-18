@@ -89,7 +89,7 @@
     .btn span.kbd{ font-variant-numeric: tabular-nums; opacity:.7; font-weight:500; }
 
     /* Focus styles (high-contrast, visible) */
-    :where(a, button, .btn, audio):focus-visible{
+    :where(a, button, .btn, audio, input):focus-visible{
       outline: 3px solid #7a5b2e; outline-offset: 3px; border-radius: 12px;
     }
 
@@ -103,7 +103,21 @@
 
     /* Small heading/subtle divider */
     .head { margin-bottom: .25rem; }
-    .sub { margin: 0 0 1rem 0; color: var(--ink-soft); }
+
+    /* New: subtitle + toggle row */
+    .headline-row{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .sub {
+      margin: 0 0 1rem 0;
+      color: var(--ink-soft);
+    }
+
     .hr {
       height: 1px; background: linear-gradient(90deg, transparent, #e9decb, transparent);
       margin: .75rem 0 1rem;
@@ -111,6 +125,7 @@
 
     /* Utility: constrain content spacing */
     .stack { display: grid; gap: var(--gap); }
+
     .top-corner {
       position: fixed;
       top: 1.25rem;   /* adds breathing room from top */
@@ -122,6 +137,38 @@
       user-select: none;
       z-index: 10;    /* ensures it floats above the card */
     }
+
+    /* New: image toggle styling */
+    .image-toggle{
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .85rem;
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+    .image-toggle-label{
+      font-weight: 600;
+    }
+    .toggle-option{
+      display: inline-flex;
+      align-items: center;
+      gap: .2rem;
+      cursor: pointer;
+    }
+    .toggle-option input[type="radio"]{
+      margin: 0;
+      width: .9rem;
+      height: .9rem;
+      accent-color: #7a5b2e;
+    }
+
+    @media (max-width: 480px){
+      .image-toggle{
+        justify-content: flex-start;
+        white-space: normal;
+      }
+    }
   </style>
 </head>
 <body>
@@ -129,7 +176,24 @@
   <main class="card" role="main">
     <header class="head">
       <h1 style="margin:.25rem 0 .15rem 0;">Kriah, Learning to read Hebrew</h1>
-      <p class="sub">Reference for the Aleph-Bet with audio.</p>
+
+      <!-- New row: subtitle + image toggle -->
+      <div class="headline-row">
+        <p class="sub">Reference for the Aleph-Bet with audio.</p>
+
+        <div class="image-toggle" role="group" aria-label="Choose Aleph-Bet chart style">
+          <span class="image-toggle-label">Show:</span>
+          <label class="toggle-option">
+            <input type="radio" name="chart-style" value="named" id="chart-named" checked />
+            <span>Named</span>
+          </label>
+          <label class="toggle-option">
+            <input type="radio" name="chart-style" value="nameless" id="chart-nameless" />
+            <span>Nameless</span>
+          </label>
+        </div>
+      </div>
+
       <div class="hr" aria-hidden="true"></div>
     </header>
 
@@ -141,6 +205,7 @@
         <div class="image-wrap">
           <!-- TODO: If assets live in a subfolder, set basePath in the script below -->
           <img
+            id="alephbet-image"
             class="use-base"
             data-src="alephbet.png"
             alt="The Hebrew Aleph-Bet: chart of letters Alef through Tav in reading order."
@@ -181,20 +246,43 @@
        ----------------------------------------------------------- */
     const basePath = ""; // TODO: set to "assets/" or similar if needed
     const version  = "v1.2";
-    
+
+    const makeAssetUrl = (file) => basePath + file + "?v=" + version;
+
     // Apply basePath to any element with .use-base and data-src/data-href
     document.querySelectorAll(".use-base").forEach(el => {
       const src = el.getAttribute("data-src");
       const href = el.getAttribute("data-href");
-      if (src)  el.setAttribute("src",  basePath + src);
-      if (href) el.setAttribute("href", basePath + href);
+      if (src)  el.setAttribute("src",  makeAssetUrl(src));
+      if (href) el.setAttribute("href", makeAssetUrl(href));
     });
+
+    // ------------------------------------------------------------
+    // Image toggle logic: swap between named and nameless charts
+    // ------------------------------------------------------------
+    const chartImg = document.getElementById("alephbet-image");
+    const namedRadio = document.getElementById("chart-named");
+    const namelessRadio = document.getElementById("chart-nameless");
+
+    function updateChartImage() {
+      if (!chartImg) return;
+
+      const isNameless = namelessRadio && namelessRadio.checked;
+      const fileName = isNameless ? "alephbet_nameless.png" : "alephbet.png";
+
+      chartImg.setAttribute("src", makeAssetUrl(fileName));
+      chartImg.setAttribute(
+        "alt",
+        isNameless
+          ? "The Hebrew Aleph-Bet: chart of letters Alef through Tav without letter names."
+          : "The Hebrew Aleph-Bet: chart of letters Alef through Tav in reading order."
+      );
+    }
+
+    if (namedRadio && namelessRadio) {
+      namedRadio.addEventListener("change", updateChartImage);
+      namelessRadio.addEventListener("change", updateChartImage);
+    }
   </script>
 </body>
 </html>
-
-
-
-
-
-
