@@ -138,7 +138,7 @@
       z-index: 10;    /* ensures it floats above the card */
     }
 
-    /* New: image toggle styling */
+        /* New: image slider toggle styling */
     .image-toggle{
       display: inline-flex;
       align-items: center;
@@ -150,17 +150,41 @@
     .image-toggle-label{
       font-weight: 600;
     }
-    .toggle-option{
+    .toggle-text{
+      font-size: .8rem;
+      opacity: .85;
+    }
+    .toggle-switch{
+      position: relative;
+      width: 2.4rem;
+      height: 1.3rem;
+      border-radius: 999px;
+      border: 1px solid #d7c7ac;
+      background: #f3e7d3;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: .2rem;
-      cursor: pointer;
+      justify-content: flex-start;
+      transition: background-color .18s ease, border-color .18s ease;
     }
-    .toggle-option input[type="radio"]{
-      margin: 0;
-      width: .9rem;
-      height: .9rem;
-      accent-color: #7a5b2e;
+    .toggle-thumb{
+      position: absolute;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      background: #fffdf8;
+      box-shadow: 0 2px 6px rgba(0,0,0,.18);
+      left: 0.1rem;
+      transition: transform .18s ease;
+    }
+    .toggle-switch.is-on{
+      background: #e4cda7;
+      border-color: #c9a977;
+    }
+    .toggle-switch.is-on .toggle-thumb{
+      transform: translateX(1.05rem);
     }
 
     @media (max-width: 480px){
@@ -181,16 +205,19 @@
       <div class="headline-row">
         <p class="sub">Reference for the Aleph-Bet with audio.</p>
 
-        <div class="image-toggle" role="group" aria-label="Choose Aleph-Bet chart style">
+        <div class="image-toggle" aria-label="Choose Aleph-Bet chart style">
           <span class="image-toggle-label">Show:</span>
-          <label class="toggle-option">
-            <input type="radio" name="chart-style" value="named" id="chart-named" checked />
-            <span>Named</span>
-          </label>
-          <label class="toggle-option">
-            <input type="radio" name="chart-style" value="nameless" id="chart-nameless" />
-            <span>Nameless</span>
-          </label>
+          <span class="toggle-text toggle-text-left">Named</span>
+          <button
+            type="button"
+            class="toggle-switch"
+            id="chart-toggle"
+            role="switch"
+            aria-checked="false"
+          >
+            <span class="toggle-thumb"></span>
+          </button>
+          <span class="toggle-text toggle-text-right">Nameless</span>
         </div>
       </div>
 
@@ -258,16 +285,15 @@
     });
 
     // ------------------------------------------------------------
-    // Image toggle logic: swap between named and nameless charts
+    // Image toggle logic: slider switch between named/nameless
     // ------------------------------------------------------------
     const chartImg = document.getElementById("alephbet-image");
-    const namedRadio = document.getElementById("chart-named");
-    const namelessRadio = document.getElementById("chart-nameless");
+    const chartToggle = document.getElementById("chart-toggle");
 
     function updateChartImage() {
       if (!chartImg) return;
 
-      const isNameless = namelessRadio && namelessRadio.checked;
+      const isNameless = chartToggle && chartToggle.classList.contains("is-on");
       const fileName = isNameless ? "alephbet_nameless.png" : "alephbet.png";
 
       chartImg.setAttribute("src", makeAssetUrl(fileName));
@@ -279,10 +305,25 @@
       );
     }
 
-    if (namedRadio && namelessRadio) {
-      namedRadio.addEventListener("change", updateChartImage);
-      namelessRadio.addEventListener("change", updateChartImage);
+    function toggleSwitch() {
+      if (!chartToggle) return;
+      const isOn = chartToggle.classList.toggle("is-on");
+      chartToggle.setAttribute("aria-checked", isOn ? "true" : "false");
+      updateChartImage();
+    }
+
+    if (chartToggle) {
+      chartToggle.addEventListener("click", toggleSwitch);
+      chartToggle.addEventListener("keydown", (e) => {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          toggleSwitch();
+        }
+      });
+      // Ensure the image/alt reflect the default switch state
+      updateChartImage();
     }
   </script>
 </body>
 </html>
+
